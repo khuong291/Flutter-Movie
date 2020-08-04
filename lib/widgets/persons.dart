@@ -9,6 +9,7 @@ import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/model/person.dart';
 import 'package:movie_app/model/person_response.dart';
+import 'package:movie_app/screens/cast_detail.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class PersonsList extends StatefulWidget {
@@ -120,7 +121,15 @@ class _PersonsListState extends State<PersonsList> {
               padding: EdgeInsets.only(top: 10.0, right: 8.0),
               width: 100.0,
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CastDetailScreen(person: persons[index]),
+                    ),
+                  );
+                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[

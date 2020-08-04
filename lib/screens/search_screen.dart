@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/screens/detail_screen.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 import 'package:movie_app/bloc/search_movies_bloc.dart';
 
@@ -17,6 +18,12 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchedMoviesBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -119,7 +126,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: itemWidth,
                 height: itemWidth * 2,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MovieDetailScreen(movie: movie),
+                      ),
+                    );
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

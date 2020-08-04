@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/bloc/get_movie_similar_bloc.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/screens/detail_screen.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class SimilarMovies extends StatefulWidget {
@@ -127,7 +128,13 @@ class _SimilarMoviesState extends State<SimilarMovies> {
               ),
               child: GestureDetector(
                 onTap: () {
-                  
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MovieDetailScreen(movie: movies[index]),
+                    ),
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

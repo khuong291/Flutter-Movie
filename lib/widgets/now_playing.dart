@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/bloc/get_now_playing_bloc.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/screens/detail_screen.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 import 'package:page_indicator/page_indicator.dart';
 
@@ -104,7 +105,15 @@ class _NowPlayingState extends State<NowPlaying> {
             itemCount: movies.take(5).length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MovieDetailScreen(movie: movies[index]),
+                    ),
+                  );
+                },
                 child: Stack(
                   children: <Widget>[
                     Hero(

@@ -1,3 +1,4 @@
+import 'package:movie_app/model/cast_detail_response.dart';
 import 'package:movie_app/model/cast_response.dart';
 import 'package:movie_app/model/genre_response.dart';
 import 'package:movie_app/model/movie_detail_response.dart';
@@ -17,6 +18,7 @@ class MovieRepository {
   var getPersonsUrl = "$mainUrl/trending/person/week";
   var movieUrl = "$mainUrl/movie";
   var searchMovieUrl = "$mainUrl/search/movie";
+  var castUrl = "$mainUrl/person";
 
   Future<MovieResponse> getMovies() async {
     var params = {
@@ -148,6 +150,20 @@ class MovieRepository {
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       return CastResponse.withError("$error");
+    }
+  }
+
+  Future<CastDetailResponse> getCastDetail(int id) async {
+    var params = {
+      "api_key": apiKey,
+      "language": "en-US"
+    };
+    try {
+      Response response = await _dio.get(castUrl + "/$id", queryParameters: params);
+      return CastDetailResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CastDetailResponse.withError("$error");
     }
   }
 }
