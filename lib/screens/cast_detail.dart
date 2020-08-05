@@ -1,35 +1,33 @@
 import 'dart:ui';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_app/bloc/get_cast_detail_bloc.dart';
-import 'package:movie_app/bloc/get_movie_videos_bloc.dart';
 import 'package:movie_app/model/cast_detail_response.dart';
-import 'package:movie_app/model/person.dart';
-import 'package:movie_app/model/person_response.dart';
+import 'package:movie_app/style/theme.dart' as Style;
 
 class CastDetailScreen extends StatefulWidget {
-  final Person person;
+  final int castId;
 
-  CastDetailScreen({Key key, @required this.person}) : super(key: key);
+  CastDetailScreen({Key key, @required this.castId}) : super(key: key);
 
   @override
-  _CastDetailScreenState createState() => _CastDetailScreenState(person);
+  _CastDetailScreenState createState() => _CastDetailScreenState(castId);
 }
 
 class _CastDetailScreenState extends State<CastDetailScreen> {
-  final Person person;
+  final int castId;
 
-  _CastDetailScreenState(this.person);
+  _CastDetailScreenState(this.castId);
 
   @override
   void initState() {
     super.initState();
-    castDetailBloc.getCastDetail(person.id);
+    castDetailBloc.getCastDetail(castId);
   }
 
   @override
   void dispose() {
+    castDetailBloc.drainStream();
     super.dispose();
   }
 
@@ -80,6 +78,159 @@ class _CastDetailScreenState extends State<CastDetailScreen> {
   }
 
   Widget _buildHomeWidget(CastDetailResponse data) {
-    return Center(child: Text(data.cast.biography));
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cast = data.cast;
+    final movies = data.movies;
+    print(movies.length);
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(cast.birthday);
+    String birthDate = DateFormat("dd/MM/yyyy").format(tempDate);
+    String gender = (cast.gender == 0) ? "Female" : "Male";
+
+    return Scaffold(
+        backgroundColor: Style.Colors.mainColor,
+        appBar: AppBar(
+          backgroundColor: Style.Colors.mainColor,
+          centerTitle: true,
+          title: Text(cast.name),
+        ),
+        body: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(15.0),
+          children: <Widget>[
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(
+                      flex: 1,
+                      child: Container(
+                          height: screenWidth / 3,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    "https://image.tmdb.org/t/p/w200/" +
+                                        cast.profileImg)),
+                          ))),
+                  SizedBox(width: 20.0),
+                  Flexible(
+                      flex: 2,
+                      child: Container(
+                        height: screenWidth / 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text("Gender: " + gender,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0)),
+                            Text("Known for: " + cast.known,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0)),
+                            Text("Birthday: " + birthDate,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0)),
+                            Text("Place of Birth: " + cast.placeOfBirth,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0)),
+                            Text("Popularity: " + cast.popularity.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0)),
+                          ],
+                        ),
+                      ))
+                ]),
+            SizedBox(height: 20.0),
+            Text("Known for:",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.0)),
+            SizedBox(height: 8.0),
+            Container(
+              height: 270.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Hero(
+                          tag: movies[index].id,
+                          child: Container(
+                              width: 120.0,
+                              height: 180.0,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2.0)),
+                                shape: BoxShape.rectangle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        "https://image.tmdb.org/t/p/w200/" + movies[index].poster)),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          width: 100,
+                          child: Text(
+                            movies[index].title,
+                            maxLines: 2,
+                            style: TextStyle(
+                                height: 1.4,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11.0),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Container(
+                          width: 100,
+                          child: Text(
+                            movies[index].character,
+                            maxLines: 2,
+                            style: TextStyle(
+                                height: 1.4,
+                                color: Colors.yellowAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11.0),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Text("Biography:",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.0)),
+            SizedBox(height: 8.0),
+            Text(cast.biography,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0))
+          ],
+        ));
   }
 }

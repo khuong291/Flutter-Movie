@@ -159,8 +159,9 @@ class MovieRepository {
       "language": "en-US"
     };
     try {
-      Response response = await _dio.get(castUrl + "/$id", queryParameters: params);
-      return CastDetailResponse.fromJson(response.data);
+      Response castResponse = await _dio.get(castUrl + "/$id", queryParameters: params);
+      Response moviesResponse = await _dio.get(castUrl + "/$id/movie_credits", queryParameters: params);
+      return CastDetailResponse.fromJson(castResponse.data, moviesResponse.data);
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       return CastDetailResponse.withError("$error");

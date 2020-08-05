@@ -1,12 +1,6 @@
-import 'dart:convert';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_app/bloc/get_movies_bloc.dart';
 import 'package:movie_app/bloc/get_persons_bloc.dart';
-import 'package:movie_app/model/movie.dart';
-import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/model/person.dart';
 import 'package:movie_app/model/person_response.dart';
 import 'package:movie_app/screens/cast_detail.dart';
@@ -111,7 +105,7 @@ class _PersonsListState extends State<PersonsList> {
       );
     } else
       return Container(
-        height: 116.0,
+        height: 140.0,
         padding: EdgeInsets.only(left: 10.0),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -126,7 +120,7 @@ class _PersonsListState extends State<PersonsList> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          CastDetailScreen(person: persons[index]),
+                          CastDetailScreen(castId: persons[index].id),
                     ),
                   );
                 },
@@ -168,6 +162,7 @@ class _PersonsListState extends State<PersonsList> {
                     Text(
                       persons[index].name,
                       maxLines: 2,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           height: 1.4,
                           color: Colors.white,

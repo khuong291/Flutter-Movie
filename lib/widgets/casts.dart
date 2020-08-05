@@ -1,17 +1,9 @@
-import 'dart:convert';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/bloc/get_casts_bloc.dart';
-import 'package:movie_app/bloc/get_movies_bloc.dart';
-import 'package:movie_app/bloc/get_persons_bloc.dart';
 import 'package:movie_app/model/cast.dart';
 import 'package:movie_app/model/cast_response.dart';
-import 'package:movie_app/model/movie.dart';
-import 'package:movie_app/model/movie_response.dart';
-import 'package:movie_app/model/person.dart';
-import 'package:movie_app/model/person_response.dart';
+import 'package:movie_app/screens/cast_detail.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class Casts extends StatefulWidget {
@@ -135,7 +127,13 @@ class _CastsState extends State<Casts> {
               width: 100.0,
               child: GestureDetector(
                 onTap: () {
-                  
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CastDetailScreen(castId: casts[index].id),
+                    ),
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
