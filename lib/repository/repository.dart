@@ -44,7 +44,6 @@ class MovieRepository {
     };
     try {
       Response response = await _dio.get(searchMovieUrl, queryParameters: params);
-      print(response.data);
       return MovieResponse.fromJson(response.data);
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");

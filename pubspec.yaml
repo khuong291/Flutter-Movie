@@ -38,6 +38,7 @@ dependencies:
   sliver_fab: ^1.0.0
   youtube_player_flutter: ^6.1.0+7
   intl: ^0.16.1
+  tuple: ^1.0.3
 
 dev_dependencies:
   flutter_test:

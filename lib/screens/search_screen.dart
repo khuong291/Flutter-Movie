@@ -6,6 +6,8 @@ import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/screens/detail_screen.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 import 'package:movie_app/bloc/search_movies_bloc.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key}) : super(key: key);
@@ -15,14 +17,25 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final _searchedMoviesBloc = SearchedMoviesBloc();
+  final PublishSubject<String> _searchText = PublishSubject<String>();
+
   @override
   void initState() {
     super.initState();
+    _searchText.stream
+        .distinct()
+        .debounceTime(Duration(milliseconds: 500))
+        .listen((query) {
+      if (query.length > 2) {
+        _searchedMoviesBloc.searchMovies(query);
+      }
+    });
   }
 
   @override
   void dispose() {
-    searchedMoviesBloc.dispose();
+    _searchedMoviesBloc.dispose();
     super.dispose();
   }
 
@@ -34,30 +47,31 @@ class _SearchScreenState extends State<SearchScreen> {
             backgroundColor: Style.Colors.mainColor,
             centerTitle: true,
             title: TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: "Search your movies...",
-                border: InputBorder.none,
-                hintStyle: TextStyle(color: Colors.white30),
-              ),
-              style: TextStyle(color: Colors.white, fontSize: 16.0),
-              onChanged: (query) => {
-                if (query.length > 2) {searchedMoviesBloc.searchMovies(query)}
-              },
-            )),
-        body: StreamBuilder<MovieResponse>(
-          stream: searchedMoviesBloc.subject.stream,
-          builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: "Search your movies...",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white30),
+                ),
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                onChanged: (query) => _searchText.add(query))),
+        body: StreamBuilder<Tuple2<MovieResponse, bool>>(
+          stream: _searchedMoviesBloc.subject.stream,
+          builder:
+              (context, AsyncSnapshot<Tuple2<MovieResponse, bool>> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return _buildErrorWidget(snapshot.data.error);
+              if (snapshot.data.item2) {
+                return _buildLoadingWidget();
               }
-              return _buildHomeWidget(snapshot.data);
+              if (snapshot.data.item1.error != null &&
+                  snapshot.data.item1.error.length > 0) {
+                return _buildErrorWidget(snapshot.data.item1.error);
+              }
+              return _buildHomeWidget(snapshot.data.item1);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
-              return _buildLoadingWidget();
+              return SizedBox.shrink();
             }
           },
         ));
@@ -130,8 +144,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            MovieDetailScreen(movie: movie),
+                        builder: (context) => MovieDetailScreen(movie: movie),
                       ),
                     );
                   },

@@ -13,7 +13,7 @@ class CastsBloc {
     _subject.sink.add(response);
   }
 
-  void drainStream(){ _subject.value = null; }
+  void drainStream() => _subject.value = null;
   @mustCallSuper
   void dispose() async{
     await _subject.drain();
