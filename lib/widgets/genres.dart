@@ -37,20 +37,23 @@ class _GenresScreenState extends State<GenresScreen> {
   }
 
   Widget _buildLoadingWidget() {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 25.0,
-          width: 25.0,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            strokeWidth: 4.0,
-          ),
-        )
-      ],
-    ));
+    return Container(
+      height: 307.0,
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 25.0,
+            width: 25.0,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              strokeWidth: 4.0,
+            ),
+          )
+        ],
+      )),
+    );
   }
 
   Widget _buildErrorWidget(String error) {

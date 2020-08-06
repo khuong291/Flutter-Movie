@@ -29,22 +29,22 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void initState() {
     super.initState();
-    movieVideosBloc..getMovieVideos(movie.id);
+    movieVideosBloc.getMovieVideos(movie.id);
   }
 
   @override
   void dispose() {
     super.dispose();
-    movieVideosBloc..drainStream();
+    movieVideosBloc.drainStream();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
-      body: new Builder(
+      body: Builder(
         builder: (context) {
-          return new SliverFab(
+          return SliverFab(
             floatingPosition: FloatingPosition(right: 20),
             floatingWidget: StreamBuilder<VideoResponse>(
               stream: movieVideosBloc.subject.stream,
@@ -68,7 +68,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 backgroundColor: Style.Colors.mainColor,
                 expandedHeight: 200.0,
                 pinned: true,
-                flexibleSpace: new FlexibleSpaceBar(
+                flexibleSpace: FlexibleSpaceBar(
                     title: Text(
                       movie.title.length > 40
                           ? movie.title.substring(0, 37) + "..."
@@ -79,16 +79,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     background: Stack(
                       children: <Widget>[
                         Container(
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            image: new DecorationImage(
+                            image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
                                     "https://image.tmdb.org/t/p/original/" +
                                         movie.backPoster)),
                           ),
-                          child: new Container(
-                            decoration: new BoxDecoration(
+                          child: Container(
+                            decoration: BoxDecoration(
                                 color: Colors.black.withOpacity(0.5)),
                           ),
                         ),
@@ -115,7 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     Padding(
-                      padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                      padding: EdgeInsets.only(left: 10.0, top: 20.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -162,7 +162,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       height: 5.0,
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text(
                         movie.overview,
                         style: TextStyle(

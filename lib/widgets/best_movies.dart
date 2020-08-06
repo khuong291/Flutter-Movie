@@ -26,7 +26,7 @@ class _BestMoviesState extends State<BestMovies> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+          padding: EdgeInsets.only(left: 10.0, top: 20.0),
           child: Text(
             "BEST POPULAR MOVIES",
             style: TextStyle(
